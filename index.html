@@ -5,29 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayuka Yamo App</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         .hidden { display: none !important; }
         .transition-all { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-gray-50">
-    <div class="max-w-md mx-auto bg-gray-50 min-h-screen relative" id="app">
+    <!-- Authentication Screen -->
+    <div id="auth-screen" class="max-w-md mx-auto bg-white min-h-screen flex flex-col justify-center p-6">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Ayuka Yamo</h1>
+            <p class="text-gray-600 text-sm">Natural Healing & Wellness Platform</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="space-y-4">
+            <h2 class="text-xl font-semibold text-gray-800 text-center mb-6">Welcome Back</h2>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email or Phone</label>
+                <input type="text" id="login-email" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter email or phone">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <input type="password" id="login-password" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter password">
+            </div>
+            <button onclick="login()" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700">Login</button>
+            <div class="text-center">
+                <button onclick="showSignup()" class="text-green-600 text-sm hover:text-green-700">Don't have an account? Sign up</button>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form" class="space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-gray-800 text-center mb-6">Create Account</h2>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                <input type="text" id="signup-name" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Your full name">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                <input type="email" id="signup-email" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Your email">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
+                <input type="tel" id="signup-phone" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Your phone">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Password *</label>
+                <input type="password" id="signup-password" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Create password">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Referral Code (Optional)</label>
+                <input type="text" id="signup-referral" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter referral code">
+                <p class="text-xs text-green-600 mt-1">Get 25 iKb welcome bonus!</p>
+            </div>
+            <button onclick="signup()" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700">Create Account</button>
+            <div class="text-center">
+                <button onclick="showLogin()" class="text-green-600 text-sm hover:text-green-700">Already have account? Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="max-w-md mx-auto bg-gray-50 min-h-screen relative hidden">
         <!-- Header -->
         <div class="bg-white border-b border-gray-200 px-4 py-3">
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-xl font-bold text-gray-800">Ayuka Yamo</h1>
-                    <p class="text-xs text-gray-500">A subsidiary of Valenta Holdings Ltd.</p>
-                    <p class="text-xs text-gray-600 mt-1 leading-tight">The most effective Homeopathic, Naturopathic & Allopathic Treatment Therapy using fresh food based products. Best for Chronic health conditions and autoimmune disorders</p>
+                    <p class="text-xs text-gray-500">A subsidiary of Valentor Holdings Ltd.</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <i data-lucide="bell" class="w-6 h-6 text-gray-600"></i>
-                    <button onclick="toggleMenu()" class="p-1">
-                        <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
-                        <i data-lucide="x" id="close-icon" class="w-6 h-6 hidden"></i>
+                    <span class="text-xs text-gray-600" id="user-greeting">Hi User!</span>
+                    <button onclick="toggleMenu()">
+                        <span id="menu-icon">☰</span>
+                        <span id="close-icon" class="hidden">✕</span>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Welcome Guide -->
+        <div id="welcome-guide" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-lg w-full max-w-md p-6 text-center">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Welcome to Ayuka Yamo!</h3>
+                <p class="text-gray-600 mb-6">Choose your wellness path:</p>
+                <div class="space-y-4">
+                    <button onclick="chooseProducts(); closeWelcome();" class="w-full bg-green-600 text-white p-4 rounded-lg hover:bg-green-700">
+                        <div class="text-2xl mb-2">📦</div>
+                        <div class="font-medium">Buy Products</div>
+                        <div class="text-sm text-green-100">Individual products for specific conditions</div>
+                    </button>
+                    <button onclick="chooseTreatment(); closeWelcome();" class="w-full bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700">
+                        <div class="text-2xl mb-2">🩺</div>
+                        <div class="font-medium">Full Treatment Process</div>
+                        <div class="text-sm text-purple-100">Complete 4-stage therapy with doctors</div>
+                    </button>
+                </div>
+                <button onclick="closeWelcome()" class="mt-4 text-gray-500 text-sm">I'll decide later</button>
             </div>
         </div>
 
@@ -36,11 +111,36 @@
             <div class="bg-white w-64 h-full p-4" onclick="event.stopPropagation()">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-lg font-bold text-gray-800">Menu</h2>
-                    <button onclick="closeMenu()">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
+                    <button onclick="closeMenu()">✕</button>
                 </div>
                 <nav class="space-y-2" id="nav-items"></nav>
+                <div class="absolute bottom-4 w-56">
+                    <button onclick="logout()" class="w-full bg-red-600 text-white py-2 rounded-lg text-sm hover:bg-red-700">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advertising Modal -->
+        <div id="advertising-modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-lg w-full max-w-md">
+                <div class="p-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-800">Advertise & Earn</h3>
+                        <button onclick="closeAdvertising()">✕</button>
+                    </div>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <h4 class="font-medium text-green-800 mb-2">Earn Kabiru Points</h4>
+                        <p class="text-sm text-green-700">Share on social media and earn points!</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button onclick="shareToFacebook()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">📘 Facebook (+20 iKb)</button>
+                        <button onclick="shareToTwitter()" class="w-full bg-sky-500 text-white py-3 rounded-lg hover:bg-sky-600">🐦 Twitter (+15 iKb)</button>
+                        <button onclick="shareToWhatsApp()" class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600">💬 WhatsApp (+25 iKb)</button>
+                        <button onclick="shareToInstagram()" class="w-full bg-pink-600 text-white py-3 rounded-lg hover:bg-pink-700">📸 Instagram (+20 iKb)</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -49,76 +149,59 @@
             <div class="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
                 <div class="p-4 border-b border-gray-200">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-800">Consultation & Appointment</h3>
-                        <button onclick="closeConsultForm()">
-                            <i data-lucide="x" class="w-5 h-5 text-gray-500"></i>
-                        </button>
+                        <h3 class="text-lg font-semibold text-gray-800">Consultation</h3>
+                        <button onclick="closeConsultForm()">✕</button>
                     </div>
                     <p class="text-sm text-gray-600 mt-1">Product: <span id="selected-product-name"></span> - KSh 10,000</p>
                 </div>
-                
                 <div class="p-4 space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                        <input type="text" id="consult-fullname" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter your full name" oninput="updateConsultSubmitButton()">
+                        <input type="text" id="consult-fullname" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter name" oninput="updateConsultSubmitButton()">
                     </div>
-                    
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Number *</label>
-                        <input type="tel" id="consult-contact" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Your phone number" oninput="updateConsultSubmitButton()">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact *</label>
+                        <input type="tel" id="consult-contact" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Phone" oninput="updateConsultSubmitButton()">
                     </div>
-                    
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Doctor</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Doctor</label>
                         <select id="consult-doctor" class="w-full border border-gray-300 rounded-lg p-3">
-                            <option value="">Select preferred doctor</option>
-                            <option value="HDr Magero Asa Rateng - Ayuka Yamo Therapies">HDr Magero Asa Rateng - Chronic conditions & autoimmune</option>
-                            <option value="HDr Kaigi - Maat Botanicals">HDr Kaigi - Naturopathic tinctures & oils</option>
-                            <option value="HDr Orudi Aywak - Yath Tiyo beauty">HDr Orudi Aywak - Skin, hair & beauty</option>
-                            <option value="HDr Adenga Ayanga - Herbal Treatment">HDr Adenga Ayanga - Herbal & spiritual healing</option>
-                            <option value="HDr Akoth Syambua - Traditional Treatment">HDr Akoth Syambua - Traditional products</option>
-                            <option value="Dr. Aisha Mwangi">Dr. Aisha Mwangi - General consultation</option>
-                            <option value="Dr. James Kiprotich">Dr. James Kiprotich - Digestive health</option>
-                            <option value="Dr. Sarah Wanjiku">Dr. Sarah Wanjiku - Hormonal health</option>
+                            <option value="">Select doctor</option>
+                            <option value="HDr Magero Asa Rateng">HDr Magero Asa Rateng</option>
+                            <option value="HDr Kaigi">HDr Kaigi</option>
+                            <option value="HDr Orudi Aywak">HDr Orudi Aywak</option>
+                            <option value="HDr Adenga Ayanga">HDr Adenga Ayanga</option>
+                            <option value="HDr Akoth Syambua">HDr Akoth Syambua</option>
                         </select>
                     </div>
-                    
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Date</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
                             <input type="date" id="consult-date" class="w-full border border-gray-300 rounded-lg p-3">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Time</label>
                             <select id="consult-time" class="w-full border border-gray-300 rounded-lg p-3">
-                                <option value="">Select time</option>
+                                <option value="">Time</option>
                                 <option value="09:00">09:00 AM</option>
-                                <option value="10:00">10:00 AM</option>
-                                <option value="11:00">11:00 AM</option>
                                 <option value="14:00">02:00 PM</option>
-                                <option value="15:00">03:00 PM</option>
                                 <option value="16:00">04:00 PM</option>
                             </select>
                         </div>
                     </div>
-                    
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Symptoms</label>
-                        <textarea id="consult-symptoms" class="w-full border border-gray-300 rounded-lg p-3 h-24" placeholder="Describe your current health concerns..."></textarea>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Symptoms</label>
+                        <textarea id="consult-symptoms" class="w-full border border-gray-300 rounded-lg p-3 h-20" placeholder="Describe concerns..."></textarea>
                     </div>
-                    
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Urgency Level</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Urgency</label>
                         <div class="grid grid-cols-3 gap-2">
-                            <button onclick="setUrgency('Low')" id="urgency-low" class="border border-gray-300 rounded-lg p-2 text-sm hover:bg-gray-50">Low</button>
-                            <button onclick="setUrgency('Medium')" id="urgency-medium" class="border border-gray-300 rounded-lg p-2 text-sm hover:bg-gray-50">Medium</button>
-                            <button onclick="setUrgency('High')" id="urgency-high" class="border border-gray-300 rounded-lg p-2 text-sm hover:bg-gray-50">High</button>
+                            <button onclick="setUrgency('Low')" id="urgency-low" class="border border-gray-300 rounded-lg p-2 text-sm">Low</button>
+                            <button onclick="setUrgency('Medium')" id="urgency-medium" class="border border-gray-300 rounded-lg p-2 text-sm">Medium</button>
+                            <button onclick="setUrgency('High')" id="urgency-high" class="border border-gray-300 rounded-lg p-2 text-sm">High</button>
                         </div>
                     </div>
-                    
-                    <button onclick="submitConsultation()" id="submit-consult-btn" class="w-full bg-gray-400 text-white py-3 rounded-lg font-medium cursor-not-allowed" disabled>
-                        Book Appointment & Consultation
-                    </button>
+                    <button onclick="submitConsultation()" id="submit-consult-btn" class="w-full bg-gray-400 text-white py-3 rounded-lg font-medium cursor-not-allowed" disabled>Book Appointment</button>
                 </div>
             </div>
         </div>
@@ -126,20 +209,14 @@
         <!-- ChatBot -->
         <div id="chatbot" class="fixed bottom-20 right-4 w-80 h-96 bg-white border border-gray-200 rounded-lg shadow-lg z-40 flex flex-col hidden">
             <div class="bg-green-600 text-white p-3 rounded-t-lg flex items-center justify-between">
-                <h4 class="font-medium">Ayuka Yamo Assistant</h4>
-                <button onclick="toggleChatbot()">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
+                <h4 class="font-medium">💬 Assistant</h4>
+                <button onclick="toggleChatbot()">✕</button>
             </div>
-            
             <div class="flex-1 overflow-y-auto p-3 space-y-2" id="chat-messages"></div>
-            
             <div class="p-3 border-t border-gray-200">
                 <div class="flex space-x-2">
-                    <input type="text" id="chat-input" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)">
-                    <button onclick="sendChatMessage()" class="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700">
-                        <i data-lucide="send" class="w-4 h-4"></i>
-                    </button>
+                    <input type="text" id="chat-input" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Type message..." onkeypress="handleChatKeyPress(event)">
+                    <button onclick="sendChatMessage()" class="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700">📤</button>
                 </div>
             </div>
         </div>
@@ -147,10 +224,11 @@
         <!-- Main Content -->
         <div class="p-4 pb-20" id="main-content"></div>
 
-        <!-- Floating Chat Button -->
-        <button onclick="toggleChatbot()" class="fixed bottom-24 right-4 bg-green-600 text-white p-3 rounded-full shadow-lg hover:bg-green-700 z-30">
-            <i data-lucide="message-circle" class="w-6 h-6"></i>
-        </button>
+        <!-- Floating Buttons -->
+        <div class="fixed bottom-24 right-4 space-y-2 z-30">
+            <button onclick="showAdvertising()" class="bg-orange-600 text-white p-3 rounded-full shadow-lg hover:bg-orange-700">📢</button>
+            <button onclick="toggleChatbot()" class="bg-green-600 text-white p-3 rounded-full shadow-lg hover:bg-green-700">💬</button>
+        </div>
 
         <!-- Bottom Navigation -->
         <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200">
@@ -161,115 +239,235 @@
     <script>
         // Application State
         let state = {
+            isAuthenticated: false,
             activeTab: 'home',
             isMenuOpen: false,
-            showConsultForm: false,
-            showChatbot: false,
+            showWelcome: false,
             selectedProduct: '',
             selectedUrgency: '',
-            chatMessages: [
-                { sender: 'bot', message: "Hello! I'm your Ayuka Yamo assistant. How can I help you today?" }
-            ],
+            userChoice: '',
+            chatMessages: [{ sender: 'bot', message: "Hello! I'm your Ayuka Yamo assistant. How can I help you today?" }],
             diagnosisForm: {
-                fullName: '',
-                idNumber: '',
-                contact: '',
-                residential: '',
-                referralSource: '',
-                waistSymptoms: '',
-                midSectionSymptoms: '',
-                chestSymptoms: '',
-                neckHeadSymptoms: '',
-                specificTreatment: '',
-                paymentCode: '',
-                hasPaidDiagnosis: false
+                fullName: '', idNumber: '', contact: '', residential: '', referralSource: '',
+                waistSymptoms: '', midSectionSymptoms: '', chestSymptoms: '', neckHeadSymptoms: '',
+                specificTreatment: '', paymentCode: '', hasPaidDiagnosis: false
             },
             user: {
-                name: 'John Doe',
-                email: 'john@example.com',
-                kabiru: 150,
-                referralCode: 'AYUKAJOHN2025',
-                personalLink: 'https://ayukayamo.com/ref/AYUKAJOHN2025',
-                treatments: [
-                    { 
-                        id: 1, 
-                        name: 'Complete Treatment Program', 
-                        progress: 25, 
-                        nextAppointment: '2025-09-05',
-                        stage: 'Startup - 24 Days Cleaning',
-                        daysRemaining: 18
-                    },
-                    { 
-                        id: 2, 
-                        name: 'Immunity Booster', 
-                        progress: 90, 
-                        nextAppointment: '2025-09-10',
-                        stage: 'Maintenance',
-                        daysRemaining: 3
-                    }
-                ],
-                referrals: 3
-            }
+                id: null, name: '', email: '', phone: '', kabiru: 0, referralCode: '', personalLink: '',
+                referredBy: '', treatments: [], referrals: 0, totalEarnings: 0, joinDate: ''
+            },
+            members: []
         };
 
         const navigationItems = [
-            { id: 'home', icon: 'home', label: 'Home' },
-            { id: 'products', icon: 'package', label: 'Products & Services' },
-            { id: 'diagnosis', icon: 'file-text', label: 'Live Diagnosis' },
-            { id: 'therapy', icon: 'stethoscope', label: 'Treatment Therapy' },
-            { id: 'payments', icon: 'credit-card', label: 'Payments' },
-            { id: 'delivery', icon: 'calendar', label: 'Delivery' },
-            { id: 'followups', icon: 'phone', label: 'Follow-ups' },
-            { id: 'protocol', icon: 'stethoscope', label: 'Treatment Protocol' },
-            { id: 'account', icon: 'user', label: 'My Account' }
+            { id: 'home', icon: '🏠', label: 'Home' },
+            { id: 'products', icon: '📦', label: 'Products & Services' },
+            { id: 'diagnosis', icon: '📋', label: 'Live Diagnosis' },
+            { id: 'therapy', icon: '🩺', label: 'Treatment Therapy' },
+            { id: 'payments', icon: '💳', label: 'Payments' },
+            { id: 'delivery', icon: '📅', label: 'Delivery' },
+            { id: 'followups', icon: '📞', label: 'Follow-ups' },
+            { id: 'protocol', icon: '📋', label: 'Treatment Protocol' },
+            { id: 'account', icon: '👤', label: 'My Account' }
         ];
 
         const products = [
-            'Auto-immune disorders',
-            'Weight & BMI',
-            'Hormones cure',
-            'First & 2nd stage cancers',
-            'Natural birth control',
-            'Asthmatic best',
-            'Stomach health',
-            'Arthritis cure',
-            'Teeth and gum',
-            'Skin care products',
-            'Wound products'
+            'Auto-immune disorders', 'Weight & BMI', 'Hormones cure', 'First & 2nd stage cancers',
+            'Natural birth control', 'Asthmatic best', 'Stomach health', 'Arthritis cure',
+            'Teeth and gum', 'Skin care products', 'Wound products'
         ];
 
-        const treatmentStages = [
-            {
-                stage: 1,
-                name: 'Startup - 24 Days Cleaning Period',
-                duration: '24 days',
-                description: 'Initial detoxification and system preparation',
-                status: 'active'
-            },
-            {
-                stage: 2,
-                name: '2nd Stage - Chronic Therapy',
-                duration: '30-60 days',
-                description: 'Intensive treatment for chronic conditions',
-                status: 'upcoming'
-            },
-            {
-                stage: 3,
-                name: '3rd Stage - DNA Fixing',
-                duration: '14 days',
-                description: 'Cellular repair and genetic optimization',
-                status: 'upcoming'
-            },
-            {
-                stage: 4,
-                name: '4th Stage - Free Monitoring',
-                duration: '1 year',
-                description: 'Continuous health monitoring and maintenance',
-                status: 'upcoming'
+        // Authentication Functions
+        function showSignup() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+
+        function generateReferralCode(name) {
+            const namePart = name.replace(/\s+/g, '').substring(0, 6).toUpperCase();
+            const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
+            return `AYUKA${namePart}${randomPart}`;
+        }
+
+        function generateUserId() {
+            return 'USER_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+        }
+
+        function signup() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const phone = document.getElementById('signup-phone').value;
+            const password = document.getElementById('signup-password').value;
+            const referralCode = document.getElementById('signup-referral').value;
+
+            if (!name || !email || !phone || !password) {
+                alert('Please fill in all required fields');
+                return;
             }
-        ];
 
-        // Utility Functions
+            const savedMembers = localStorage.getItem('ayukaYamoMembers');
+            if (savedMembers) state.members = JSON.parse(savedMembers);
+
+            const existingUser = state.members.find(m => m.email === email || m.phone === phone);
+            if (existingUser) {
+                alert('Account already exists');
+                return;
+            }
+
+            const userId = generateUserId();
+            const userReferralCode = generateReferralCode(name);
+            const personalLink = `https://ayukayamo.com/ref/${userReferralCode}`;
+
+            const newUser = {
+                id: userId, name: name, email: email, phone: phone,
+                kabiru: referralCode ? 25 : 0, referralCode: userReferralCode,
+                personalLink: personalLink, referredBy: referralCode || '',
+                treatments: [], referrals: 0, totalEarnings: referralCode ? 25 : 0,
+                joinDate: new Date().toISOString().split('T')[0]
+            };
+
+            if (referralCode) {
+                const referrer = state.members.find(m => m.referralCode === referralCode);
+                if (referrer) {
+                    referrer.kabiru += 50;
+                    referrer.referrals += 1;
+                    referrer.totalEarnings += 50;
+                }
+            }
+
+            state.members.push(newUser);
+            state.user = newUser;
+            state.isAuthenticated = true;
+            state.showWelcome = true;
+
+            localStorage.setItem('ayukaYamoUser', JSON.stringify(newUser));
+            localStorage.setItem('ayukaYamoMembers', JSON.stringify(state.members));
+
+            showMainApp();
+        }
+
+        function login() {
+            const emailOrPhone = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!emailOrPhone || !password) {
+                alert('Please enter credentials');
+                return;
+            }
+
+            const savedMembers = localStorage.getItem('ayukaYamoMembers');
+            if (savedMembers) state.members = JSON.parse(savedMembers);
+
+            const user = state.members.find(m => m.email === emailOrPhone || m.phone === emailOrPhone);
+            
+            if (user) {
+                state.user = user;
+                state.isAuthenticated = true;
+                localStorage.setItem('ayukaYamoUser', JSON.stringify(user));
+                showMainApp();
+            } else {
+                alert('Account not found. Please sign up first.');
+            }
+        }
+
+        function logout() {
+            state.isAuthenticated = false;
+            state.user = {};
+            localStorage.removeItem('ayukaYamoUser');
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+            closeMenu();
+        }
+
+        function showMainApp() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('user-greeting').textContent = `Hi ${state.user.name.split(' ')[0]}!`;
+            
+            if (state.showWelcome) {
+                document.getElementById('welcome-guide').classList.remove('hidden');
+            }
+            
+            renderContent();
+            updateBottomNav();
+            renderNavItems();
+        }
+
+        function closeWelcome() {
+            document.getElementById('welcome-guide').classList.add('hidden');
+            state.showWelcome = false;
+        }
+
+        function chooseProducts() {
+            state.userChoice = 'products';
+            setActiveTab('products');
+        }
+
+        function chooseTreatment() {
+            state.userChoice = 'treatment';
+            setActiveTab('therapy');
+        }
+
+        function showAdvertising() {
+            document.getElementById('advertising-modal').classList.remove('hidden');
+        }
+
+        function closeAdvertising() {
+            document.getElementById('advertising-modal').classList.add('hidden');
+        }
+
+        // Social Media Functions
+        function shareToFacebook() {
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(state.user.personalLink)}`;
+            window.open(url, '_blank');
+            awardSocialPoints(20);
+        }
+
+        function shareToTwitter() {
+            const text = `Join Ayuka Yamo for natural healing! ${state.user.personalLink}`;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+            awardSocialPoints(15);
+        }
+
+        function shareToWhatsApp() {
+            const text = `Join Ayuka Yamo for natural healing!\n${state.user.personalLink}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+            awardSocialPoints(25);
+        }
+
+        function shareToInstagram() {
+            const text = `Join Ayuka Yamo! Code: ${state.user.referralCode}\n${state.user.personalLink}`;
+            navigator.clipboard.writeText(text);
+            alert('Text copied for Instagram!');
+            awardSocialPoints(20);
+        }
+
+        function awardSocialPoints(points) {
+            state.user.kabiru += points;
+            state.user.totalEarnings += points;
+            updateUserData();
+            alert(`You earned ${points} iKb points!`);
+            closeAdvertising();
+            renderContent();
+        }
+
+        function updateUserData() {
+            localStorage.setItem('ayukaYamoUser', JSON.stringify(state.user));
+            const memberIndex = state.members.findIndex(m => m.id === state.user.id);
+            if (memberIndex !== -1) {
+                state.members[memberIndex] = state.user;
+                localStorage.setItem('ayukaYamoMembers', JSON.stringify(state.members));
+            }
+        }
+
+        // UI Functions
         function toggleMenu() {
             state.isMenuOpen = !state.isMenuOpen;
             const menu = document.getElementById('sliding-menu');
@@ -305,41 +503,23 @@
             state.selectedProduct = productName;
             document.getElementById('selected-product-name').textContent = productName;
             document.getElementById('consultation-modal').classList.remove('hidden');
-            state.showConsultForm = true;
+            document.getElementById('consult-fullname').value = state.user.name;
+            document.getElementById('consult-contact').value = state.user.phone;
+            updateConsultSubmitButton();
         }
 
         function closeConsultForm() {
             document.getElementById('consultation-modal').classList.add('hidden');
-            state.showConsultForm = false;
-            clearConsultForm();
-        }
-
-        function clearConsultForm() {
-            document.getElementById('consult-fullname').value = '';
-            document.getElementById('consult-contact').value = '';
-            document.getElementById('consult-date').value = '';
-            document.getElementById('consult-time').value = '';
-            document.getElementById('consult-symptoms').value = '';
-            state.selectedUrgency = '';
-            updateUrgencyButtons();
-            updateConsultSubmitButton();
         }
 
         function setUrgency(level) {
             state.selectedUrgency = level;
-            updateUrgencyButtons();
-            updateConsultSubmitButton();
-        }
-
-        function updateUrgencyButtons() {
-            ['Low', 'Medium', 'High'].forEach(level => {
-                const btn = document.getElementById(`urgency-${level.toLowerCase()}`);
+            ['Low', 'Medium', 'High'].forEach(l => {
+                const btn = document.getElementById(`urgency-${l.toLowerCase()}`);
                 if (btn) {
-                    if (state.selectedUrgency === level) {
-                        btn.className = 'border border-green-500 bg-green-50 text-green-700 rounded-lg p-2 text-sm';
-                    } else {
-                        btn.className = 'border border-gray-300 rounded-lg p-2 text-sm hover:bg-gray-50';
-                    }
+                    btn.className = l === level ? 
+                        'border border-green-500 bg-green-50 text-green-700 rounded-lg p-2 text-sm' :
+                        'border border-gray-300 rounded-lg p-2 text-sm hover:bg-gray-50';
                 }
             });
         }
@@ -364,158 +544,129 @@
             const fullName = document.getElementById('consult-fullname').value;
             const contact = document.getElementById('consult-contact').value;
             const doctor = document.getElementById('consult-doctor').value;
-            const appointmentDate = document.getElementById('consult-date').value;
-            const appointmentTime = document.getElementById('consult-time').value;
+            const date = document.getElementById('consult-date').value;
+            const time = document.getElementById('consult-time').value;
             const symptoms = document.getElementById('consult-symptoms').value;
 
-            const emailBody = `New Product Consultation & Appointment Request:
+            const emailBody = `Consultation Request:
+Member: ${fullName} (${state.user.id})
+Contact: ${contact}
+Product: ${state.selectedProduct}
+Doctor: ${doctor}
+Date: ${date} ${time}
+Symptoms: ${symptoms}
+Urgency: ${state.selectedUrgency}`;
 
-Personal Information:
-- Full Name: ${fullName}
-- Contact: ${contact}
-- Product Interest: ${state.selectedProduct}
-
-Doctor & Appointment Details:
-- Preferred Doctor: ${doctor || 'No preference'}
-- Preferred Date: ${appointmentDate}
-- Preferred Time: ${appointmentTime}
-
-Health Information:
-- Current Symptoms: ${symptoms}
-- Urgency Level: ${state.selectedUrgency}`;
-
-            const mailtoLink = `mailto:grouptauafrica@gmail.com?subject=Product Consultation & Appointment - ${state.selectedProduct}&body=${encodeURIComponent(emailBody)}`;
-            window.open(mailtoLink);
+            window.open(`mailto:grouptauafrica@gmail.com?subject=Consultation - ${state.selectedProduct}&body=${encodeURIComponent(emailBody)}`);
             
             state.user.kabiru += 15;
+            state.user.totalEarnings += 15;
+            updateUserData();
             closeConsultForm();
+            alert('Request sent! Earned 15 iKb points.');
+            renderContent();
+        }
+
+        function buyProduct(productName) {
+            const emailBody = `Product Purchase:
+Member: ${state.user.name} (${state.user.id})
+Email: ${state.user.email}
+Phone: ${state.user.phone}
+Product: ${productName}
+Price: KSh 10,000
+Referral Code: ${state.user.referralCode}`;
+
+            window.open(`mailto:grouptauafrica@gmail.com?subject=Purchase - ${productName}&body=${encodeURIComponent(emailBody)}`);
+            
+            state.user.kabiru += 100;
+            state.user.totalEarnings += 100;
+            updateUserData();
+            alert('Purchase request sent! Earned 100 iKb points.');
             renderContent();
         }
 
         function toggleChatbot() {
             const chatbot = document.getElementById('chatbot');
             state.showChatbot = !state.showChatbot;
-            
-            if (state.showChatbot) {
-                chatbot.classList.remove('hidden');
-                renderChatMessages();
-            } else {
-                chatbot.classList.add('hidden');
-            }
+            chatbot.classList.toggle('hidden');
+            if (state.showChatbot) renderChatMessages();
         }
 
         function sendChatMessage() {
             const input = document.getElementById('chat-input');
             const message = input.value.trim();
-            
             if (!message) return;
             
             state.chatMessages.push({ sender: 'user', message: message });
             input.value = '';
             renderChatMessages();
             
-            // Bot response
             setTimeout(() => {
-                let botResponse = "I understand your concern. Let me connect you with our specialist.";
-                
+                let botResponse = "I understand. Let me help you.";
                 if (message.toLowerCase().includes('appointment')) {
-                    botResponse = "I can help you book an appointment. Would you like to schedule a consultation or diagnosis session?";
+                    botResponse = "I can help book an appointment. Which service interests you?";
                 } else if (message.toLowerCase().includes('product')) {
-                    botResponse = "We have various products available for KSh 10,000 each. Which condition would you like to address?";
-                } else if (message.toLowerCase().includes('payment')) {
-                    botResponse = "We accept M-Pesa and card payments. You'll earn Kabiru points with every purchase!";
+                    botResponse = "Our products are KSh 10,000 each. Which condition?";
+                } else if (message.toLowerCase().includes('referral')) {
+                    botResponse = `Your code: ${state.user.referralCode}. Share to earn 50 iKb!`;
                 }
-                
                 state.chatMessages.push({ sender: 'bot', message: botResponse });
                 renderChatMessages();
             }, 1000);
         }
 
         function handleChatKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendChatMessage();
-            }
+            if (event.key === 'Enter') sendChatMessage();
         }
 
         function renderChatMessages() {
             const container = document.getElementById('chat-messages');
             container.innerHTML = '';
-            
             state.chatMessages.forEach(msg => {
                 const div = document.createElement('div');
                 div.className = `flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`;
-                
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `max-w-[70%] p-2 rounded-lg text-sm ${
-                    msg.sender === 'user' 
-                        ? 'bg-green-600 text-white' 
-                        : 'bg-gray-100 text-gray-800'
+                    msg.sender === 'user' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-800'
                 }`;
                 messageDiv.textContent = msg.message;
-                
                 div.appendChild(messageDiv);
                 container.appendChild(div);
             });
-            
             container.scrollTop = container.scrollHeight;
         }
 
         function payDiagnosisFee() {
             const paymentCode = 'AY' + Date.now().toString().slice(-6);
-            alert(`Payment successful! Your payment code is: ${paymentCode}`);
+            alert(`Payment successful! Code: ${paymentCode}`);
             state.diagnosisForm.paymentCode = paymentCode;
             state.diagnosisForm.hasPaidDiagnosis = true;
+            state.user.kabiru += 25;
+            state.user.totalEarnings += 25;
+            updateUserData();
             renderContent();
         }
 
         function submitDiagnosis() {
             if (!state.diagnosisForm.hasPaidDiagnosis) {
-                alert('Please pay the diagnosis fee first');
+                alert('Please pay diagnosis fee first');
                 return;
             }
 
             const form = state.diagnosisForm;
-            const emailBody = `New Diagnosis Form Submission:
-
+            const emailBody = `Diagnosis Submission:
+Member: ${state.user.name} (${state.user.id})
 Payment Code: ${form.paymentCode}
+Contact: ${form.contact}
+Symptoms: Waist: ${form.waistSymptoms}, Mid: ${form.midSectionSymptoms}, Chest: ${form.chestSymptoms}, Head: ${form.neckHeadSymptoms}`;
 
-Personal Information:
-- Full Name: ${form.fullName}
-- ID Number: ${form.idNumber}
-- Contact: ${form.contact}
-- Residential: ${form.residential}
-- How they heard about us: ${form.referralSource}
-
-Health Symptoms:
-- Waist to Feet: ${form.waistSymptoms}
-- Mid-section: ${form.midSectionSymptoms}
-- Chest Area: ${form.chestSymptoms}
-- Neck & Head: ${form.neckHeadSymptoms}
-
-Specific Treatment Requested: ${form.specificTreatment}`;
-
-            const mailtoLink = `mailto:grouptauafrica@gmail.com?subject=Diagnosis Form Submission - ${form.fullName}&body=${encodeURIComponent(emailBody)}`;
-            window.open(mailtoLink);
+            window.open(`mailto:grouptauafrica@gmail.com?subject=Diagnosis - ${form.fullName}&body=${encodeURIComponent(emailBody)}`);
             
             state.user.kabiru += 25;
+            state.user.totalEarnings += 25;
+            updateUserData();
+            alert('Diagnosis submitted! Earned 25 iKb points.');
             renderContent();
-        }
-
-        function copyReferralLink() {
-            navigator.clipboard.writeText(state.user.personalLink);
-            alert('Referral link copied to clipboard!');
-        }
-
-        function shareReferralLink() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Join Ayuka Yamo',
-                    text: 'Get natural healing treatments with my referral link',
-                    url: state.user.personalLink
-                });
-            } else {
-                copyReferralLink();
-            }
         }
 
         function updateDiagnosisForm(field, value) {
@@ -526,7 +677,6 @@ Specific Treatment Requested: ${form.specificTreatment}`;
         function updateDiagnosisSubmitButton() {
             const btn = document.getElementById('submit-diagnosis-btn');
             const form = state.diagnosisForm;
-            
             if (btn) {
                 if (form.fullName && form.idNumber && form.contact && form.residential && form.referralSource && form.hasPaidDiagnosis) {
                     btn.disabled = false;
@@ -538,16 +688,32 @@ Specific Treatment Requested: ${form.specificTreatment}`;
             }
         }
 
+        function copyReferralLink() {
+            navigator.clipboard.writeText(state.user.personalLink);
+            alert('Link copied!');
+        }
+
+        function shareReferralLink() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join Ayuka Yamo',
+                    url: state.user.personalLink
+                });
+            } else {
+                copyReferralLink();
+            }
+        }
+
         // Render Functions
         function renderHome() {
             return `
                 <div class="space-y-6">
                     <div class="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 rounded-lg">
-                        <h2 class="text-2xl font-bold mb-2">Welcome to Ayuka Yamo</h2>
+                        <h2 class="text-2xl font-bold mb-2">Welcome ${state.user.name}</h2>
                         <p class="text-green-100">Your holistic health journey starts here</p>
                         <div class="mt-4 flex items-center space-x-4">
                             <div class="bg-white/20 px-3 py-1 rounded-full">
-                                <span class="text-sm">Kabiru Points: ${state.user.kabiru} iKb</span>
+                                <span class="text-sm">Kabiru: ${state.user.kabiru} iKb</span>
                             </div>
                             <div class="bg-white/20 px-3 py-1 rounded-full">
                                 <span class="text-sm">Referrals: ${state.user.referrals}</span>
@@ -555,48 +721,35 @@ Specific Treatment Requested: ${form.specificTreatment}`;
                         </div>
                     </div>
 
-                    <!-- Kabiru Mining App Button -->
                     <div class="bg-gradient-to-r from-blue-600 to-purple-700 text-white rounded-lg p-4">
-                        <h3 class="font-semibold mb-2 flex items-center">
-                            <i data-lucide="cpu" class="w-5 h-5 mr-2"></i>
-                            Kabiru Mining Platform
-                        </h3>
-                        <p class="text-blue-100 text-sm mb-3">Access our blockchain mining portal and earn additional Kabiru points through value-based mining</p>
-                        <button onclick="window.open('https://magero1985.github.io/Kabiru-Mining-Portal-/', '_blank')" class="w-full bg-white text-blue-600 py-3 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors flex items-center justify-center">
-                            <i data-lucide="external-link" class="w-4 h-4 mr-2"></i>
+                        <h3 class="font-semibold mb-2">Kabiru Mining Platform</h3>
+                        <p class="text-blue-100 text-sm mb-3">Access blockchain mining and convert points to real money</p>
+                        <button onclick="window.open('https://magero1985.github.io/Kabiru-Mining-Portal-/', '_blank')" class="w-full bg-white text-blue-600 py-3 rounded-lg text-sm font-medium hover:bg-gray-100">
                             Kabiru Mining App
                         </button>
                     </div>
 
+                    ${state.userChoice === 'products' ? `
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <h3 class="font-medium text-green-800 mb-2">Choice: Individual Products</h3>
+                            <button onclick="setActiveTab('products')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm">Browse Products</button>
+                        </div>
+                    ` : state.userChoice === 'treatment' ? `
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                            <h3 class="font-medium text-purple-800 mb-2">Choice: Full Treatment</h3>
+                            <button onclick="setActiveTab('therapy')" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm">Start Treatment</button>
+                        </div>
+                    ` : ''}
+
                     <div class="grid grid-cols-2 gap-4">
                         <button onclick="setActiveTab('diagnosis')" class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center hover:bg-blue-100">
-                            <i data-lucide="file-text" class="w-8 h-8 text-blue-600 mx-auto mb-2"></i>
+                            <div class="text-2xl mb-2">📋</div>
                             <span class="text-sm font-medium text-blue-800">Start Diagnosis</span>
                         </button>
                         <button onclick="setActiveTab('therapy')" class="bg-purple-50 border border-purple-200 p-4 rounded-lg text-center hover:bg-purple-100">
-                            <i data-lucide="stethoscope" class="w-8 h-8 text-purple-600 mx-auto mb-2"></i>
+                            <div class="text-2xl mb-2">🩺</div>
                             <span class="text-sm font-medium text-purple-800">Treatment Therapy</span>
                         </button>
-                    </div>
-
-                    <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Active Treatments</h3>
-                        ${state.user.treatments.map(treatment => `
-                            <div class="mb-4 last:mb-0">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="font-medium text-gray-700">${treatment.name}</span>
-                                    <span class="text-sm text-gray-500">${treatment.progress}%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: ${treatment.progress}%"></div>
-                                </div>
-                                <div class="mt-2 text-xs text-gray-600">
-                                    <p>Stage: ${treatment.stage}</p>
-                                    <p>Days remaining: ${treatment.daysRemaining}</p>
-                                    <p>Next appointment: ${treatment.nextAppointment}</p>
-                                </div>
-                            </div>
-                        `).join('')}
                     </div>
                 </div>
             `;
@@ -612,196 +765,19 @@ Specific Treatment Requested: ${form.specificTreatment}`;
                     </div>
                     
                     <div class="grid gap-4">
-                        ${products.map((product, index) => `
-                            <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        ${products.map(product => `
+                            <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="font-semibold text-gray-800">${product}</h3>
                                     <span class="text-green-600 font-bold text-sm">KSh 10,000</span>
                                 </div>
                                 <p class="text-gray-600 text-sm mb-3">Specialized treatment for ${product.toLowerCase()}</p>
                                 <div class="flex space-x-2">
-                                    <button onclick="showConsultForm('${product}')" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700">
-                                        Consult & Book
-                                    </button>
-                                    <button class="px-4 py-2 border border-green-600 text-green-600 rounded-lg text-sm hover:bg-green-50">
-                                        Buy Now
-                                    </button>
+                                    <button onclick="showConsultForm('${product}')" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700">Consult</button>
+                                    <button onclick="buyProduct('${product}')" class="px-4 py-2 border border-green-600 text-green-600 rounded-lg text-sm hover:bg-green-50">Buy Now</button>
                                 </div>
                             </div>
                         `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderDiagnosis() {
-            return `
-                <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-gray-800">Live Diagnosis Form</h2>
-                    
-                    ${!state.diagnosisForm.hasPaidDiagnosis ? `
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                            <h3 class="font-medium text-yellow-800 mb-2">Diagnosis Fee Required</h3>
-                            <p class="text-sm text-yellow-700 mb-3">Please pay the diagnosis fee of KSh 500 to proceed with your diagnosis.</p>
-                            <button onclick="payDiagnosisFee()" class="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-700">
-                                Pay Diagnosis Fee - KSh 500
-                            </button>
-                        </div>
-                    ` : `
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-                            <p class="text-sm text-green-800">✓ Diagnosis fee paid. Payment code: ${state.diagnosisForm.paymentCode}</p>
-                        </div>
-                    `}
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-6">
-                        <div class="space-y-4">
-                            <div class="border-b border-gray-200 pb-4">
-                                <h3 class="font-semibold text-gray-800 mb-3">Personal Information</h3>
-                                
-                                <div class="space-y-3">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                                        <input type="text" id="diag-fullname" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter your full name" oninput="updateDiagnosisForm('fullName', this.value)">
-                                    </div>
-                                    
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">ID Number *</label>
-                                        <input type="text" id="diag-idnumber" class="w-full border border-gray-300 rounded-lg p-3" placeholder="National ID number" oninput="updateDiagnosisForm('idNumber', this.value)">
-                                    </div>
-                                    
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Number *</label>
-                                        <input type="tel" id="diag-contact" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Your phone number" oninput="updateDiagnosisForm('contact', this.value)">
-                                    </div>
-                                    
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Residential Address *</label>
-                                        <input type="text" id="diag-residential" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Your residential address" oninput="updateDiagnosisForm('residential', this.value)">
-                                    </div>
-                                    
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">How did you hear about Ayuka Yamo? *</label>
-                                        <select id="diag-referral" class="w-full border border-gray-300 rounded-lg p-3" onchange="updateDiagnosisForm('referralSource', this.value)">
-                                            <option value="">Select source</option>
-                                            <option value="friend">Friend/Family Referral</option>
-                                            <option value="social">Social Media</option>
-                                            <option value="google">Google Search</option>
-                                            <option value="advertisement">Advertisement</option>
-                                            <option value="doctor">Doctor Recommendation</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="space-y-4">
-                                <h3 class="font-semibold text-gray-800">Health Conditions by Body Region</h3>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Waist to Feet Symptoms</label>
-                                    <textarea id="diag-waist" class="w-full border border-gray-300 rounded-lg p-3 h-20" placeholder="Describe any symptoms in waist, hips, legs, or feet..." oninput="updateDiagnosisForm('waistSymptoms', this.value)"></textarea>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Mid-section Symptoms</label>
-                                    <textarea id="diag-midsection" class="w-full border border-gray-300 rounded-lg p-3 h-20" placeholder="Describe any symptoms in abdomen, lower back, digestive issues..." oninput="updateDiagnosisForm('midSectionSymptoms', this.value)"></textarea>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Chest Area Symptoms</label>
-                                    <textarea id="diag-chest" class="w-full border border-gray-300 rounded-lg p-3 h-20" placeholder="Describe any symptoms in chest, heart, lungs, upper back..." oninput="updateDiagnosisForm('chestSymptoms', this.value)"></textarea>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Neck & Head Symptoms</label>
-                                    <textarea id="diag-neckhead" class="w-full border border-gray-300 rounded-lg p-3 h-20" placeholder="Describe any symptoms in head, neck, face, throat..." oninput="updateDiagnosisForm('neckHeadSymptoms', this.value)"></textarea>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Specific Treatment Required (Optional)</label>
-                                    <textarea id="diag-treatment" class="w-full border border-gray-300 rounded-lg p-3 h-20" placeholder="If you have a specific treatment in mind, please describe..." oninput="updateDiagnosisForm('specificTreatment', this.value)"></textarea>
-                                </div>
-                            </div>
-                            
-                            <button onclick="submitDiagnosis()" id="submit-diagnosis-btn" class="w-full bg-gray-400 text-white py-3 rounded-lg font-medium cursor-not-allowed" disabled>
-                                Submit for Review
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderProtocol() {
-            return `
-                <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-gray-800">Treatment Protocol</h2>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Complete Treatment Stages</h3>
-                        
-                        <div class="space-y-4">
-                            ${treatmentStages.map(stage => `
-                                <div class="p-4 rounded-lg border-2 ${
-                                    stage.status === 'active' ? 'border-green-500 bg-green-50' :
-                                    stage.status === 'completed' ? 'border-blue-500 bg-blue-50' :
-                                    'border-gray-300 bg-gray-50'
-                                }">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="font-semibold text-gray-800">Stage ${stage.stage}: ${stage.name}</h4>
-                                        <span class="text-xs px-2 py-1 rounded-full ${
-                                            stage.status === 'active' ? 'bg-green-600 text-white' :
-                                            stage.status === 'completed' ? 'bg-blue-600 text-white' :
-                                            'bg-gray-400 text-white'
-                                        }">
-                                            ${stage.status === 'active' ? 'Active' :
-                                             stage.status === 'completed' ? 'Completed' : 'Upcoming'}
-                                        </span>
-                                    </div>
-                                    <p class="text-sm text-gray-600 mb-2">${stage.description}</p>
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-sm font-medium text-gray-700">Duration: ${stage.duration}</span>
-                                        ${stage.status === 'active' ? `
-                                            <div class="flex items-center text-sm text-green-600">
-                                                <i data-lucide="clock" class="w-4 h-4 mr-1"></i>
-                                                18 days remaining
-                                            </div>
-                                        ` : ''}
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Current Daily Protocol: Stage 1</h3>
-                        
-                        <div class="space-y-4">
-                            ${[
-                                { time: 'Morning (7:00 AM)', task: 'Take 2 detox capsules with warm water', completed: true },
-                                { time: 'Afternoon (2:00 PM)', task: 'Herbal tea blend + light meal', completed: true },
-                                { time: 'Evening (7:00 PM)', task: 'Take 1 immunity booster capsule', completed: false },
-                                { time: 'Before Bed (9:00 PM)', task: 'Meditation + herbal drink', completed: false }
-                            ].map((step, index) => `
-                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                                    <i data-lucide="check-circle" class="w-5 h-5 ${step.completed ? 'text-green-600' : 'text-gray-300'}"></i>
-                                    <div class="flex-1">
-                                        <p class="font-medium text-gray-800">${step.time}</p>
-                                        <p class="text-sm text-gray-600">${step.task}</p>
-                                    </div>
-                                    ${!step.completed ? `
-                                        <button class="text-green-600 text-sm font-medium hover:text-green-700">
-                                            Mark Done
-                                        </button>
-                                    ` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <h4 class="font-medium text-yellow-800 mb-2">Today's Notes</h4>
-                        <p class="text-sm text-yellow-700">You're in the Startup Cleaning Period. Focus on hydration and avoid processed foods. Next stage begins in 18 days.</p>
                     </div>
                 </div>
             `;
@@ -813,190 +789,88 @@ Specific Treatment Requested: ${form.specificTreatment}`;
                     <h2 class="text-2xl font-bold text-gray-800">Treatment Therapy</h2>
                     
                     <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg p-4">
-                        <h3 class="font-semibold mb-2">Expert Homeopathic Consultation</h3>
-                        <p class="text-purple-100 text-sm">Connect with our certified homeopathic doctors for specialized treatment regimens</p>
+                        <h3 class="font-semibold mb-2">Expert Consultation</h3>
+                        <p class="text-purple-100 text-sm">Connect with certified doctors</p>
                     </div>
                     
                     <div class="bg-white border border-gray-200 rounded-lg p-4">
                         <h3 class="font-semibold text-gray-800 mb-4">Available Specialists</h3>
                         ${[
-                            { name: 'HDr Magero Asa Rateng', specialty: 'Ayuka Yamo Therapies - Chronic health conditions and autoimmune disorders', available: 'Available Now', rating: 5.0 },
-                            { name: 'HDr Kaigi', specialty: 'Maat Botanicals - Naturopathic tinctures and therapeutic oils', available: 'Available Now', rating: 4.9 },
-                            { name: 'HDr Orudi Aywak', specialty: 'Yath Tiyo beauty products - Skin, hair and beauty products', available: 'Available in 30 min', rating: 4.9 },
-                            { name: 'HDr Adenga Ayanga', specialty: 'Herbal Treatment, spiritual prayers', available: 'Available Today', rating: 4.8 },
-                            { name: 'HDr Akoth Syambua', specialty: 'Assorted traditional Treatment products', available: 'Available Tomorrow', rating: 4.8 },
-                            { name: 'Dr. Aisha Mwangi', specialty: 'Chronic Conditions & Autoimmune', available: 'Available Now', rating: 4.9 },
-                            { name: 'Dr. James Kiprotich', specialty: 'Digestive & Metabolic Health', available: 'Available in 30 min', rating: 4.8 },
-                            { name: 'Dr. Sarah Wanjiku', specialty: 'Hormonal & Reproductive Health', available: 'Available Tomorrow', rating: 4.9 }
-                        ].map((doctor, index) => `
-                            <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                            { name: 'HDr Magero Asa Rateng', specialty: 'Ayuka Yamo Therapies - Chronic conditions', available: 'Available Now', rating: 5.0 },
+                            { name: 'HDr Kaigi', specialty: 'Maat Botanicals - Naturopathic treatments', available: 'Available Now', rating: 4.9 },
+                            { name: 'HDr Orudi Aywak', specialty: 'Yath Tiyo - Beauty products', available: 'Available', rating: 4.9 },
+                            { name: 'HDr Adenga Ayanga', specialty: 'Herbal Treatment, spiritual prayers', available: 'Available', rating: 4.8 },
+                            { name: 'HDr Akoth Syambua', specialty: 'Traditional Treatment products', available: 'Available', rating: 4.8 }
+                        ].map(doctor => `
+                            <div class="mb-3 p-3 bg-gray-50 rounded-lg">
                                 <div class="flex justify-between items-start mb-2">
                                     <div>
                                         <h4 class="font-medium text-gray-800">${doctor.name}</h4>
                                         <p class="text-sm text-gray-600">${doctor.specialty}</p>
-                                        <div class="flex items-center mt-1">
-                                            <i data-lucide="star" class="w-4 h-4 text-yellow-500 mr-1"></i>
-                                            <span class="text-sm text-gray-600">${doctor.rating}</span>
-                                        </div>
+                                        <span class="text-sm text-gray-600">Rating: ${doctor.rating}</span>
                                     </div>
-                                    <div class="text-right">
-                                        <p class="text-xs px-2 py-1 rounded-full ${
-                                            doctor.available.includes('Now') ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                                        }">
-                                            ${doctor.available}
-                                        </p>
-                                    </div>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">${doctor.available}</span>
                                 </div>
-                                <button class="w-full bg-purple-600 text-white py-2 rounded-lg text-sm hover:bg-purple-700">
-                                    Book Appointment
-                                </button>
+                                <button onclick="bookDoctor('${doctor.name}')" class="w-full bg-purple-600 text-white py-2 rounded-lg text-sm hover:bg-purple-700">Book Appointment</button>
                             </div>
                         `).join('')}
                     </div>
+                </div>
+            `;
+        }
+
+        function renderDiagnosis() {
+            return `
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Live Diagnosis</h2>
                     
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h4 class="font-medium text-blue-800 mb-2">Special Regiment Programs</h4>
-                        <div class="space-y-2 text-sm text-blue-700">
-                            <p>• Complete 4-Stage Treatment Program</p>
-                            <p>• Chronic Pain Management Protocol</p>
-                            <p>• Autoimmune Recovery Regiment</p>
-                            <p>• Digestive Health Restoration</p>
+                    ${!state.diagnosisForm.hasPaidDiagnosis ? `
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                            <h3 class="font-medium text-yellow-800 mb-2">Fee Required</h3>
+                            <p class="text-sm text-yellow-700 mb-3">Pay KSh 500 diagnosis fee</p>
+                            <button onclick="payDiagnosisFee()" class="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm">Pay KSh 500</button>
                         </div>
-                        <button class="w-full bg-blue-600 text-white py-2 rounded-lg text-sm hover:bg-blue-700 mt-3">
-                            Explore Programs
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderPayments() {
-            return `
-                <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-gray-800">Payment Systems</h2>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Payment History</h3>
-                        ${[
-                            { date: '2025-08-25', amount: 'KSh 10,000', status: 'Completed', item: 'Auto-immune disorders product', points: '100 iKb' },
-                            { date: '2025-08-20', amount: 'KSh 3,000', status: 'Completed', item: 'Consultation Session', points: '30 iKb' },
-                            { date: '2025-08-15', amount: 'KSh 500', status: 'Completed', item: 'Diagnosis Fee', points: '25 iKb' }
-                        ].map((payment, index) => `
-                            <div class="flex justify-between items-center py-3 border-b last:border-b-0">
-                                <div>
-                                    <p class="font-medium text-gray-800">${payment.item}</p>
-                                    <p class="text-sm text-gray-500">${payment.date}</p>
-                                    <p class="text-xs text-green-600">Earned: ${payment.points}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="font-medium text-gray-800">${payment.amount}</p>
-                                    <span class="text-xs px-2 py-1 rounded-full ${
-                                        payment.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                                    }">
-                                        ${payment.status}
-                                    </span>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <button class="bg-green-600 text-white p-4 rounded-lg font-medium hover:bg-green-700">
-                            M-Pesa Payment
-                        </button>
-                        <button class="bg-blue-600 text-white p-4 rounded-lg font-medium hover:bg-blue-700">
-                            Card Payment
-                        </button>
-                    </div>
-                    
-                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                        <h4 class="font-medium text-purple-800 mb-2">Kabiru Points Conversion</h4>
-                        <p class="text-sm text-purple-700 mb-3">Convert your accumulated points to money!</p>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-purple-800">Your Points: ${state.user.kabiru} iKb</span>
-                            <span class="text-purple-800">≈ KSh ${Math.floor(state.user.kabiru * 0.1)}</span>
+                    ` : `
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <p class="text-sm text-green-800">Fee paid. Code: ${state.diagnosisForm.paymentCode}</p>
                         </div>
-                        <button class="w-full bg-purple-600 text-white py-2 rounded-lg text-sm hover:bg-purple-700">
-                            Convert Points to Cash
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderDelivery() {
-            return `
-                <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-gray-800">Delivery Schedules</h2>
+                    `}
                     
-                    <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Upcoming Deliveries</h3>
-                        ${[
-                            { item: 'Auto-immune disorders product', date: '2025-09-02', status: 'In Transit', tracking: 'AY2025090001' },
-                            { item: 'Herbal Tea Blend', date: '2025-09-08', status: 'Scheduled', tracking: 'AY2025090002' }
-                        ].map((delivery, index) => `
-                            <div class="mb-4 p-3 bg-gray-50 rounded-lg">
-                                <div class="flex justify-between items-start mb-2">
-                                    <h4 class="font-medium text-gray-800">${delivery.item}</h4>
-                                    <span class="text-xs px-2 py-1 rounded-full ${
-                                        delivery.status === 'In Transit' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
-                                    }">
-                                        ${delivery.status}
-                                    </span>
-                                </div>
-                                <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                    <div class="flex items-center">
-                                        <i data-lucide="calendar" class="w-4 h-4 mr-1"></i>
-                                        ${delivery.date}
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i data-lucide="map-pin" class="w-4 h-4 mr-1"></i>
-                                        ${delivery.tracking}
-                                    </div>
-                                </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                                <input type="text" id="diag-fullname" class="w-full border border-gray-300 rounded-lg p-3" value="${state.user.name}" oninput="updateDiagnosisForm('fullName', this.value)">
                             </div>
-                        `).join('')}
-                    </div>
-                    
-                    <button class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700">
-                        Schedule New Delivery
-                    </button>
-                </div>
-            `;
-        }
-
-        function renderFollowups() {
-            return `
-                <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-gray-800">Follow-ups</h2>
-                    
-                    <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Scheduled Check-ins</h3>
-                        ${[
-                            { date: '2025-09-01', time: '10:00 AM', type: 'Phone Call', doctor: 'Dr. Aisha Mwangi' },
-                            { date: '2025-09-07', time: '2:00 PM', type: 'Video Call', doctor: 'Dr. James Kiprotich' },
-                            { date: '2025-09-14', time: '11:30 AM', type: 'In-Person', doctor: 'Dr. Aisha Mwangi' }
-                        ].map((followup, index) => `
-                            <div class="mb-3 p-3 bg-blue-50 rounded-lg">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <p class="font-medium text-gray-800">${followup.type} with ${followup.doctor}</p>
-                                        <div class="flex items-center space-x-3 text-sm text-gray-600 mt-1">
-                                            <span>${followup.date}</span>
-                                            <span>${followup.time}</span>
-                                        </div>
-                                    </div>
-                                    <button class="text-blue-600 text-sm font-medium hover:text-blue-700">
-                                        Reschedule
-                                    </button>
-                                </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ID Number *</label>
+                                <input type="text" id="diag-idnumber" class="w-full border border-gray-300 rounded-lg p-3" placeholder="National ID" oninput="updateDiagnosisForm('idNumber', this.value)">
                             </div>
-                        `).join('')}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Contact *</label>
+                                <input type="tel" id="diag-contact" class="w-full border border-gray-300 rounded-lg p-3" value="${state.user.phone}" oninput="updateDiagnosisForm('contact', this.value)">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Address *</label>
+                                <input type="text" id="diag-residential" class="w-full border border-gray-300 rounded-lg p-3" placeholder="Address" oninput="updateDiagnosisForm('residential', this.value)">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">How did you hear about us? *</label>
+                                <select id="diag-referral" class="w-full border border-gray-300 rounded-lg p-3" onchange="updateDiagnosisForm('referralSource', this.value)">
+                                    <option value="">Select source</option>
+                                    <option value="friend">Friend/Family</option>
+                                    <option value="social">Social Media</option>
+                                    <option value="google">Google</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Symptoms</label>
+                                <textarea id="diag-symptoms" class="w-full border border-gray-300 rounded-lg p-3 h-24" placeholder="Describe all symptoms..." oninput="updateDiagnosisForm('waistSymptoms', this.value)"></textarea>
+                            </div>
+                            <button onclick="submitDiagnosis()" id="submit-diagnosis-btn" class="w-full bg-gray-400 text-white py-3 rounded-lg font-medium cursor-not-allowed" disabled>Submit</button>
+                        </div>
                     </div>
-                    
-                    <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700">
-                        Request Follow-up
-                    </button>
                 </div>
             `;
         }
@@ -1007,7 +881,7 @@ Specific Treatment Requested: ${form.specificTreatment}`;
                     <h2 class="text-2xl font-bold text-gray-800">My Account</h2>
                     
                     <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Profile Information</h3>
+                        <h3 class="font-semibold text-gray-800 mb-4">Profile</h3>
                         <div class="space-y-3">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Name:</span>
@@ -1018,77 +892,107 @@ Specific Treatment Requested: ${form.specificTreatment}`;
                                 <span class="font-medium">${state.user.email}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">Member Since:</span>
-                                <span class="font-medium">August 2025</span>
+                                <span class="text-gray-600">Phone:</span>
+                                <span class="font-medium">${state.user.phone}</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-semibold">Kabiru Points (iKb)</h3>
-                            <div class="flex items-center space-x-2">
-                                <i data-lucide="gift" class="w-6 h-6"></i>
-                                <i data-lucide="dollar-sign" class="w-6 h-6"></i>
-                            </div>
-                        </div>
+                        <h3 class="font-semibold mb-3">Kabiru Points (iKb)</h3>
                         <div class="text-3xl font-bold mb-2">${state.user.kabiru} iKb</div>
-                        <p class="text-purple-100 text-sm">Earn through purchases, referrals, and treatments</p>
-                        <p class="text-purple-200 text-xs mt-1">Cash value: ≈ KSh ${Math.floor(state.user.kabiru * 0.1)}</p>
+                        <p class="text-purple-100 text-sm">Total earned: ${state.user.totalEarnings} iKb</p>
+                        <p class="text-purple-200 text-xs mt-1">Cash value: KSh ${Math.floor(state.user.kabiru * 0.1)}</p>
+                        
+                        <div class="mt-4 p-3 bg-white/20 rounded-lg">
+                            <p class="text-sm font-medium mb-2">Convert to Cash</p>
+                            <p class="text-xs text-purple-100 mb-2">To convert Kabiru points to fiat cash, use the Kabiru Mining App wallet.</p>
+                            <button onclick="window.open('https://magero1985.github.io/Kabiru-Mining-Portal-/', '_blank')" class="text-xs bg-white text-purple-600 px-3 py-1 rounded-full">
+                                Access Kabiru Wallet
+                            </button>
+                        </div>
                     </div>
 
                     <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Enhanced Referral Program</h3>
+                        <h3 class="font-semibold text-gray-800 mb-4">Referral Program</h3>
                         
                         <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-                            <p class="text-sm text-green-800 font-medium mb-2">Your Personal Referral Link:</p>
+                            <p class="text-sm text-green-800 font-medium mb-2">Your Referral Link:</p>
                             <div class="flex items-center space-x-2">
-                                <input type="text" value="${state.user.personalLink}" readonly class="flex-1 text-xs bg-white border border-green-300 rounded px-2 py-1">
-                                <button onclick="copyReferralLink()" class="p-1 text-green-600 hover:text-green-700">
-                                    <i data-lucide="copy" class="w-4 h-4"></i>
-                                </button>
-                                <button onclick="shareReferralLink()" class="p-1 text-green-600 hover:text-green-700">
-                                    <i data-lucide="share-2" class="w-4 h-4"></i>
-                                </button>
+                                <input type="text" value="${state.user.personalLink}" readonly class="flex-1 text-xs bg-white border rounded px-2 py-1">
+                                <button onclick="copyReferralLink()" class="text-green-600">Copy</button>
                             </div>
                             <p class="text-xs text-green-600 mt-1">Code: ${state.user.referralCode}</p>
                         </div>
                         
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-gray-600">Total Referrals:</span>
-                            <span class="font-bold text-2xl text-green-600">${state.user.referrals}</span>
-                        </div>
-                        
-                        <div class="text-sm text-gray-600 mb-4">
-                            <p>• Earn 50 iKb for each successful referral</p>
-                            <p>• Your friend gets 25 iKb welcome bonus</p>
-                            <p>• Both earn 10% discount on next purchase</p>
-                            <p>• Product purchases: 100 iKb each</p>
-                            <p>• Services & treatments: 15-30 iKb</p>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="text-center">
+                                <div class="font-bold text-2xl text-green-600">${state.user.referrals}</div>
+                                <div class="text-sm text-gray-600">Referrals</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-2xl text-purple-600">${state.user.totalEarnings}</div>
+                                <div class="text-sm text-gray-600">Total Earned</div>
+                            </div>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="shareReferralLink()" class="bg-green-600 text-white py-2 rounded-lg text-sm hover:bg-green-700">
-                                Share Link
-                            </button>
-                            <button onclick="copyReferralLink()" class="bg-blue-600 text-white py-2 rounded-lg text-sm hover:bg-blue-700">
-                                Copy Link
-                            </button>
+                            <button onclick="shareReferralLink()" class="bg-green-600 text-white py-2 rounded-lg text-sm">Share</button>
+                            <button onclick="showAdvertising()" class="bg-orange-600 text-white py-2 rounded-lg text-sm">Advertise</button>
                         </div>
                     </div>
+                </div>
+            `;
+        }
 
+        function renderPayments() {
+            return `
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Payments</h2>
                     <div class="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800 mb-4">Treatment Progress</h3>
-                        ${state.user.treatments.map(treatment => `
-                            <div class="mb-3 last:mb-0">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-sm font-medium text-gray-700">${treatment.name}</span>
-                                    <span class="text-sm text-gray-500">${treatment.progress}% Complete</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: ${treatment.progress}%"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Stage: ${treatment.stage}</p>
+                        <h3 class="font-semibold text-gray-800 mb-4">Payment History</h3>
+                        <div class="text-center py-4">
+                            <p class="text-gray-500">No payments yet</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="bg-green-600 text-white p-4 rounded-lg font-medium">M-Pesa</button>
+                        <button class="bg-blue-600 text-white p-4 rounded-lg font-medium">Card</button>
+                    </div>
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <h4 class="font-medium text-purple-800 mb-2">Points Conversion</h4>
+                        <p class="text-sm text-purple-700 mb-3">Points: ${state.user.kabiru} iKb ≈ KSh ${Math.floor(state.user.kabiru * 0.1)}</p>
+                        <div class="bg-white/60 p-3 rounded-lg">
+                            <p class="text-xs text-purple-700 mb-2">To convert points to cash, use Kabiru Mining App wallet.</p>
+                            <button onclick="window.open('https://magero1985.github.io/Kabiru-Mining-Portal-/', '_blank')" class="text-xs bg-purple-600 text-white px-3 py-1 rounded-full">Access Wallet</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDelivery() {
+            return `<div class="space-y-4"><h2 class="text-2xl font-bold text-gray-800">Delivery</h2><div class="bg-white border border-gray-200 rounded-lg p-4"><p class="text-gray-500 text-center py-4">No deliveries scheduled</p></div></div>`;
+        }
+
+        function renderFollowups() {
+            return `<div class="space-y-4"><h2 class="text-2xl font-bold text-gray-800">Follow-ups</h2><div class="bg-white border border-gray-200 rounded-lg p-4"><p class="text-gray-500 text-center py-4">No follow-ups scheduled</p></div></div>`;
+        }
+
+        function renderProtocol() {
+            return `
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Treatment Protocol</h2>
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-800 mb-4">4-Stage Program</h3>
+                        ${[
+                            'Stage 1: 24 Days Cleaning (24 days)',
+                            'Stage 2: Chronic Therapy (30-60 days)', 
+                            'Stage 3: DNA Fixing (14 days)',
+                            'Stage 4: Free Monitoring (1 year)'
+                        ].map((stage, i) => `
+                            <div class="p-3 rounded-lg border border-gray-300 bg-gray-50 mb-3">
+                                <h4 class="font-semibold text-gray-800">${stage}</h4>
                             </div>
                         `).join('')}
                     </div>
@@ -1096,10 +1000,20 @@ Specific Treatment Requested: ${form.specificTreatment}`;
             `;
         }
 
+        function bookDoctor(doctorName) {
+            const emailBody = `Appointment Request:
+Member: ${state.user.name}
+Phone: ${state.user.phone}
+Doctor: ${doctorName}`;
+            window.open(`mailto:grouptauafrica@gmail.com?subject=Appointment - ${doctorName}&body=${encodeURIComponent(emailBody)}`);
+            state.user.kabiru += 10;
+            updateUserData();
+            alert('Request sent! Earned 10 iKb.');
+        }
+
         function renderContent() {
             const content = document.getElementById('main-content');
             let html = '';
-            
             switch(state.activeTab) {
                 case 'home': html = renderHome(); break;
                 case 'products': html = renderProducts(); break;
@@ -1112,24 +1026,7 @@ Specific Treatment Requested: ${form.specificTreatment}`;
                 case 'account': html = renderAccount(); break;
                 default: html = renderHome();
             }
-            
             content.innerHTML = html;
-            
-            // Initialize Lucide icons with error handling
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-            
-            // Update form values if on diagnosis page
-            if (state.activeTab === 'diagnosis') {
-                setTimeout(() => {
-                    const form = state.diagnosisForm;
-                    if (document.getElementById('diag-fullname')) {
-                        document.getElementById('diag-fullname').value = form.fullName;
-                    }
-                    updateDiagnosisSubmitButton();
-                }, 100);
-            }
         }
 
         function updateBottomNav() {
@@ -1138,14 +1035,10 @@ Specific Treatment Requested: ${form.specificTreatment}`;
                 <button onclick="setActiveTab('${item.id}')" class="flex flex-col items-center p-2 rounded-lg ${
                     state.activeTab === item.id ? 'text-green-600 bg-green-50' : 'text-gray-600'
                 }">
-                    <i data-lucide="${item.icon}" class="w-5 h-5 mb-1"></i>
+                    <span class="text-xl mb-1">${item.icon}</span>
                     <span class="text-xs">${item.label.split(' ')[0]}</span>
                 </button>
             `).join('');
-            
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
         }
 
         function renderNavItems() {
@@ -1154,41 +1047,28 @@ Specific Treatment Requested: ${form.specificTreatment}`;
                 <button onclick="setActiveTab('${item.id}')" class="w-full flex items-center space-x-3 p-3 rounded-lg text-left hover:bg-gray-100 ${
                     state.activeTab === item.id ? 'bg-green-100 text-green-800' : 'text-gray-700'
                 }">
-                    <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                    <span class="text-xl">${item.icon}</span>
                     <span>${item.label}</span>
                 </button>
             `).join('');
-            
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
         }
 
-        // Initialize app
         function init() {
-            // Set minimum date for appointment booking
-            const today = new Date().toISOString().split('T')[0];
+            const savedUser = localStorage.getItem('ayukaYamoUser');
+            const savedMembers = localStorage.getItem('ayukaYamoMembers');
             
-            renderContent();
-            updateBottomNav();
-            renderNavItems();
-            renderChatMessages();
+            if (savedMembers) state.members = JSON.parse(savedMembers);
             
-            // Initialize Lucide icons with fallback
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            } else {
-                // Fallback: retry after a short delay
-                setTimeout(() => {
-                    if (typeof lucide !== 'undefined') {
-                        lucide.createIcons();
-                    }
-                }, 500);
+            if (savedUser) {
+                state.user = JSON.parse(savedUser);
+                state.isAuthenticated = true;
+                showMainApp();
             }
+            
+            renderChatMessages();
         }
 
-        // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
-                      </html>
+</html>
